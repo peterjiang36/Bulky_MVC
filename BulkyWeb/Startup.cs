@@ -26,7 +26,7 @@ namespace BulkyWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<ApplicationDbConext>(options=> options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationDbConext>(options=> options.UseSqlite("Data Source=Bulky.db"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
