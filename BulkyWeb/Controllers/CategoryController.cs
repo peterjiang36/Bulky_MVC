@@ -65,7 +65,7 @@ namespace BulkyWeb.Controllers
             }
             if (ModelState.IsValid) // go to Category Model to validate all the conditions
             {
-                _db.Categries.Add(obj); //add the new Category object to the Category table
+                _db.Categries.Update(obj); //add the new Category object to the Category table
                 _db.SaveChanges(); // go to database to create the category
                 return RedirectToAction("Index", "Category"); //reload the Categry and pass it the view
             }
