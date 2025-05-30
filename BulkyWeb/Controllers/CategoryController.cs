@@ -40,6 +40,36 @@ namespace BulkyWeb.Controllers
                 return RedirectToAction("Index", "Category"); //reload the Categry and pass it the view
             }
             return View();
+        }
+
+        public IActionResult Edit(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            Category categoryFromDb = _db.Categries.Find(id);
+            if (categoryFromDb == null)
+            {
+                return NotFound();
+            }
+            return View(categoryFromDb);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Category obj)
+        {
+            if (obj.Name != null && obj.Name == obj.DisplayOrder.ToString())
+            {
+                ModelState.AddModelError("name", "The DisplayOrder cannot exactly match the Name.");
+            }
+            if (ModelState.IsValid) // go to Category Model to validate all the conditions
+            {
+                _db.Categries.Add(obj); //add the new Category object to the Category table
+                _db.SaveChanges(); // go to database to create the category
+                return RedirectToAction("Index", "Category"); //reload the Categry and pass it the view
+            }
+            return View();
 
         }
     }
