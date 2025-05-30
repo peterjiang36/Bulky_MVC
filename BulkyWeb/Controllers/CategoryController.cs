@@ -20,5 +20,10 @@ namespace BulkyWeb.Controllers
             List<Category> objCategoryList = _db.Categries.ToList();
             return View(objCategoryList);
         }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
     }
 }
