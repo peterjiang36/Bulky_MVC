@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bulky.DataAcess.Migrations
 {
-    [DbContext(typeof(ApplicationDbConext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20250529193659_SeedCategoryTable")]
     partial class SeedCategoryTable
     {

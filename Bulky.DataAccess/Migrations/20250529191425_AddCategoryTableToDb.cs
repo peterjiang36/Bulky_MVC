@@ -7,7 +7,7 @@ namespace Bulky.DataAcess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categries",
+                name: "Categories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -24,7 +24,7 @@ namespace Bulky.DataAcess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Categries");
+                name: "Categories");
         }
     }
 }

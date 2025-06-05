@@ -7,12 +7,12 @@ namespace Bulky.DataAcess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
-                table: "Categries",
+                table: "Categories",
                 columns: new[] { "Id", "DisplayOrder", "Name" },
                 values: new object[] { 2, 2, "SciFi" });
 
             migrationBuilder.InsertData(
-                table: "Categries",
+                table: "Categories",
                 columns: new[] { "Id", "DisplayOrder", "Name" },
                 values: new object[] { 3, 3, "History" });
         }
@@ -20,12 +20,12 @@ namespace Bulky.DataAcess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
-                table: "Categries",
+                table: "Categories",
                 keyColumn: "Id",
                 keyValue: 2);
 
             migrationBuilder.DeleteData(
-                table: "Categries",
+                table: "Categories",
                 keyColumn: "Id",
                 keyValue: 3);
         }

@@ -8,14 +8,14 @@ namespace Bulky.DataAcess.Migrations
         {
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
-                table: "Categries",
+                table: "Categories",
                 type: "TEXT",
                 nullable: false,
                 oldClrType: typeof(int),
                 oldType: "INTEGER");
 
             migrationBuilder.InsertData(
-                table: "Categries",
+                table: "Categories",
                 columns: new[] { "Id", "DisplayOrder", "Name" },
                 values: new object[] { 1, 1, "Action" });
         }
@@ -23,13 +23,13 @@ namespace Bulky.DataAcess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
-                table: "Categries",
+                table: "Categories",
                 keyColumn: "Id",
                 keyValue: 1);
 
             migrationBuilder.AlterColumn<int>(
                 name: "Name",
-                table: "Categries",
+                table: "Categories",
                 type: "INTEGER",
                 nullable: false,
                 oldClrType: typeof(string),
