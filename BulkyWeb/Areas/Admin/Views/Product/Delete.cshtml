@@ -35,16 +35,19 @@
             <input asp-for="ListPrice" disabled class="form-control" />
         </div>
         <div class="mb-3 row p-1">
-            <label class="p-0">Price</label>
-            <input asp-for="Price" disabled class="form-control" />
+            <label class="p-0">Price for 1-50</label>
+            <input asp-for="Price" class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
         </div>
         <div class="mb-3 row p-1">
-            <label class="p-0">Price50</label>
-            <input asp-for="Price50" disabled class="form-control" />
+            <label class="p-0">Price for 50+</label>
+            <input asp-for="Price50" class="form-control" />
+            <span asp-validation-for="Price50" class="text-danger"></span>
         </div>
         <div class="mb-3 row p-1">
-            <label class="p-0">Price100</label>
-            <input asp-for="Price100" disabled class="form-control" />
+            <label class="p-0">Price for 100+</label>
+            <input asp-for="Price100" class="form-control" />
+            <span asp-validation-for="Price100" class="text-danger"></span>
         </div>
 
         <div class="row">

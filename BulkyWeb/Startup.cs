@@ -46,30 +46,30 @@ namespace BulkyWeb
                 app.UseHsts();
             }
 
-            // Add this block to create the database
-            //using (var scope = app.ApplicationServices.CreateScope())
-            //{
-            //    try
-            //    {
-            //        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            //Add this block to create the database
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                try
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            //        // Delete existing database to start fresh
-            //        context.Database.EnsureDeleted();
+                    // Delete existing database to start fresh
+                    context.Database.EnsureDeleted();
 
-            //        // Create database with all tables and seed data
-            //        context.Database.EnsureCreated();
+                    // Create database with all tables and seed data
+                    context.Database.EnsureCreated();
 
-            //        // Optional: Log success
-            //        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Startup>>();
-            //        logger.LogInformation("Database created successfully");
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        // Log any errors
-            //        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Startup>>();
-            //        logger.LogError(ex, "An error occurred creating the database");
-            //    }
-            //}
+                    // Optional: Log success
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Startup>>();
+                    logger.LogInformation("Database created successfully");
+                }
+                catch (Exception ex)
+                {
+                    // Log any errors
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Startup>>();
+                    logger.LogError(ex, "An error occurred creating the database");
+                }
+            }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
