@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging; // Add this using statement
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,14 +22,13 @@ namespace BulkyWeb
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<ApplicationDbContext>(options=> options.UseSqlite("Data Source=Bulky.db"));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data Source=Bulky.db"));
             services.AddScoped<IUnitofWork, UnitOfWork>();
         }
 
@@ -45,11 +45,35 @@ namespace BulkyWeb
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // Add this block to create the database
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                try
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                    // Delete existing database to start fresh
+                    context.Database.EnsureDeleted();
+
+                    // Create database with all tables and seed data
+                    context.Database.EnsureCreated();
+
+                    // Optional: Log success
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Startup>>();
+                    logger.LogInformation("Database created successfully");
+                }
+                catch (Exception ex)
+                {
+                    // Log any errors
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Startup>>();
+                    logger.LogError(ex, "An error occurred creating the database");
+                }
+            }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
