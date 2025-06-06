@@ -1,5 +1,6 @@
 ﻿using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
+using Bulky.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
@@ -22,31 +23,37 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
 
         public IActionResult Create()
-        {
-            IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category
-                .GetAll().Select(u => new SelectListItem
+        {         
+            ProductVM productVM = new()
+            {
+                CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString()
-                });
-
-            //ViewBag.CategoryList = CategoryList;
-            ViewData["CategoryList"] = CategoryList;
-
-            return View();
+                }),
+                Product = new Product()
+            };
+            return View(productVM);
         }
 
         [HttpPost]
-        public IActionResult Create(Product obj)
+        public IActionResult Create(ProductVM productVM)
         {
             if (ModelState.IsValid) // go to Product Model to validate all the conditions
             {
-                _unitOfWork.Product.Add(obj); //add the new Product object to the Product table
+                _unitOfWork.Product.Add(productVM.Product); //add the new Product object to the Product table
                 _unitOfWork.Save(); // go to database to create the product
                 TempData["success"] = "Product created successfully";
-                return RedirectToAction("Index", "Product"); //reload the Categry and pass it the view
+                return RedirectToAction("Index"); //reload the Categry and pass it the view
+            } else
+            {
+                    productVM.CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+                    {
+                        Text = u.Name,
+                        Value = u.Id.ToString()
+                    });                    
+                    return View(productVM);
             }
-            return View();
         }
 
         public IActionResult Edit(int? id)
