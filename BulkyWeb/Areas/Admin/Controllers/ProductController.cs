@@ -1,6 +1,7 @@
 ﻿using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
 using Bulky.Models.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             return View(objProductList);
         }
 
-        public IActionResult Create()
+        public IActionResult Upsert(int? id)
         {         
             ProductVM productVM = new()
             {
@@ -33,11 +34,21 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 }),
                 Product = new Product()
             };
-            return View(productVM);
+            if (id == null || id == 0)
+            {
+                // create
+                return View(productVM);
+
+            } else
+            {
+                // update
+                productVM.Product = _unitOfWork.Product.Get(u => u.Id == id);
+                return View(productVM);
+            }
         }
 
         [HttpPost]
-        public IActionResult Create(ProductVM productVM)
+        public IActionResult Upsert(ProductVM productVM, IFormFile? file)
         {
             if (ModelState.IsValid) // go to Product Model to validate all the conditions
             {
@@ -54,37 +65,6 @@ namespace BulkyWeb.Areas.Admin.Controllers
                     });                    
                     return View(productVM);
             }
-        }
-
-        public IActionResult Edit(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            Product? productFromDb = _unitOfWork.Product.Get(u=>u.Id==id);
-            if (productFromDb == null)
-            {
-                return NotFound();
-            }
-            return View(productFromDb);
-        }
-
-        [HttpPost]
-        public IActionResult Edit(Product obj)
-        {
-            //if (obj.Name != null && obj.Name == obj.DisplayOrder.ToString())
-            //{
-            //    ModelState.AddModelError("name", "The DisplayOrder cannot exactly match the Name.");
-            //}
-            if (ModelState.IsValid) // go to Product Model to validate all the conditions
-            {
-                _unitOfWork.Product.Update(obj); //add the new Product object to the Product table
-                _unitOfWork.Save(); // go to database to create the product
-                TempData["success"] = "Product updated successfully";
-                return RedirectToAction("Index", "Product"); //reload the Categry and pass it the view
-            }
-            return View();
         }
 
         public IActionResult Delete(int? id)
