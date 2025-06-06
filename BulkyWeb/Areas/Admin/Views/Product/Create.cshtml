@@ -55,7 +55,7 @@
         </div>
         <div class="mb-3 row p-1">
             <label class="p-0">CategoryId</label>
-            <select asp-for="Price100" asp-items="ViewBag.CategoryList" class="form-select p-0">
+            <select asp-for="Price100" asp-items="@(ViewData["CategoryList"] as IEnumerable<SelectListItem>)" class="form-select p-0">
                 <option diabled selected>--Select Category--</option>
             </select>
             <input asp-for="CategoryId" class="form-control" />
