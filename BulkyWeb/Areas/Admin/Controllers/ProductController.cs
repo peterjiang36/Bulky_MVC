@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace BulkyWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class ProductController : Controller
     {
         private readonly IUnitofWork _unitOfWork;
