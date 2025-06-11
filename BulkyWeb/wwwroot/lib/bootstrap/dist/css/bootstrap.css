@@ -5407,6 +5407,7 @@ textarea.form-control-lg {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: var(--bs-badge-border-radius);
+    background-color:coral
 }
 
     .badge:empty {
@@ -9605,7 +9606,7 @@ textarea.form-control-lg {
 
 .bg-secondary {
     --bs-bg-opacity: 1;
-    background-color: rgba(var(--bs-secondary-rgb), var(--bs-bg-opacity)) !important;
+    background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
 }
 
 .bg-success {

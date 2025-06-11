@@ -26,7 +26,7 @@ namespace BulkyWeb.Controllers
         }
         public IActionResult Details(int id)
         {
-            Product product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties: "Category");
+            Product product = _unitOfWork.Product.Get(u=>u.Id == id, includeProperties: "Category");
             return View(product);
         }
 
