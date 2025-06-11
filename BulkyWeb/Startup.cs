@@ -4,6 +4,7 @@ using Bulky.DataAcess.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +30,18 @@ namespace BulkyWeb
         {
             services.AddControllersWithViews();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data Source=Bulky.db"));
+            services.AddDefaultIdentity<IdentityUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 1; // For development only
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddRazorPages(); // Add this for UI
             services.AddScoped<IUnitofWork, UnitOfWork>();
         }
 
@@ -73,7 +86,9 @@ namespace BulkyWeb
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
             app.UseRouting();
+            app.UseAuthentication(); // authentication always comes before authorization
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -81,6 +96,9 @@ namespace BulkyWeb
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapRazorPages(); // Add this line for Identity pages
+
             });
         }
     }
