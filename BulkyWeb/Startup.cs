@@ -53,7 +53,11 @@ namespace BulkyWeb
 
             })
             .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-
+            services.ConfigureApplicationCookie(options => {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
             services.AddRazorPages(); // Add this for UI
             services.AddScoped<IUnitofWork, UnitOfWork>();
         }
