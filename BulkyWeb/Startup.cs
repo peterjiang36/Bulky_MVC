@@ -29,15 +29,25 @@ namespace BulkyWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data Source=Bulky.db"));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data Source=Bulky.db",
+                b => b.MigrationsAssembly("Bulky.DataAccess")));
             services.AddDefaultIdentity<IdentityUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
+                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedPhoneNumber = false;
+
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 1; // For development only
+
+                options.Lockout.AllowedForNewUsers = false; // Disable lockout for now
+
+                // User settings
+                options.User.RequireUniqueEmail = true;
+
             })
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -60,29 +70,29 @@ namespace BulkyWeb
             }
 
             //Add this block to create the database
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                try
-                {
-                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            //using (var scope = app.ApplicationServices.CreateScope())
+            //{
+            //    try
+            //    {
+            //        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                    // Delete existing database to start fresh
-                    context.Database.EnsureDeleted();
+            //        // Delete existing database to start fresh
+            //        //context.Database.EnsureDeleted();
 
-                    // Create database with all tables and seed data
-                    context.Database.EnsureCreated();
+            //        // Create database with all tables and seed data
+            //        context.Database.EnsureCreated();
 
-                    // Optional: Log success
-                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Startup>>();
-                    logger.LogInformation("Database created successfully");
-                }
-                catch (Exception ex)
-                {
-                    // Log any errors
-                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Startup>>();
-                    logger.LogError(ex, "An error occurred creating the database");
-                }
-            }
+            //        // Optional: Log success
+            //        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Startup>>();
+            //        logger.LogInformation("Database created successfully");
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        // Log any errors
+            //        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Startup>>();
+            //        logger.LogError(ex, "An error occurred creating the database");
+            //    }
+            //}
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
