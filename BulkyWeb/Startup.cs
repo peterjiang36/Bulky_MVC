@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging; // Add this using statement
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,7 @@ namespace BulkyWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
             services.AddControllersWithViews();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data Source=Bulky.db",
@@ -103,7 +105,7 @@ namespace BulkyWeb
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            StripeConfiguration.ApiKey = Configuration.GetSection("Stripe:SecretKey").Get<string>();
             app.UseRouting();
             app.UseAuthentication(); // authentication always comes before authorization
             app.UseAuthorization();
