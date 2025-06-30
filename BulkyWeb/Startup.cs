@@ -61,6 +61,11 @@ namespace BulkyWeb
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
 
+            services.AddAuthentication().AddGoogle(options => {
+                options.ClientId = Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            });
+
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
