@@ -60,6 +60,15 @@ namespace BulkyWeb
                 options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
+
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(100);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             services.AddRazorPages(); // Add this for UI
             services.AddScoped<IUnitofWork, UnitOfWork>();
         }
@@ -109,7 +118,7 @@ namespace BulkyWeb
             app.UseRouting();
             app.UseAuthentication(); // authentication always comes before authorization
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
