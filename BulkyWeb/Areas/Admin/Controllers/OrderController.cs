@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace BulkyWeb.Areas.Admin.Controllers
@@ -61,7 +62,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
             TempData["Success"] = "Order Details Updated Successfully.";
 
-            return RedirectToAction(nameof(Details), new { orderId = orderHeaderFromDb.Id});
+            return RedirectToAction(nameof(Details), new { orderId = orderHeaderFromDb.Id });
         }
 
         #region API CALLS
@@ -69,7 +70,19 @@ namespace BulkyWeb.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll(string status)
         {
-            IEnumerable<OrderHeader> objOrderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
+            IEnumerable<OrderHeader> objOrderHeaders;
+
+            if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+            {
+                objOrderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
+            }
+            else
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                objOrderHeaders = _unitOfWork.OrderHeader.GetAll(u => u.ApplicationUserId == userId, includeProperties: "ApplicationUser");
+            }
 
             switch (status)
             {
